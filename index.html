@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+
+
+<body>
+
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <div class="d-flex justify-content-around align-items-center">
+
+                    <div>
+                        <h2 class="font-weight-bold">PEOPLE DATA</h2>
+                    </div>
+
+                    <div>
+                        <button type="button" id="nextuser" class="btn btn-warning px-4 py-2">NEXT PERSON</button>
+
+                    </div>
+
+                </div>
+            </div>
+            
+            <div class="col-md-8 offset-md-2 mt-2">
+
+                <div class="d-flex flex-column justify-content-center">
+                    <div id="peopleData">
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-md-12 text-center mt-2">
+                <p id="currentShowing">CURRENTLY 3 PEOPLE SHOWING</p>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+    crossorigin="anonymous"></script>
+
+<script>
+    $('document').ready(function () {
+
+        var index = 1
+        var userData;
+
+        try {
+            fetch('./data.json', { mode: "cors" })
+                .then(response => response.json())
+                .then(jsonResponse => {
+                    userData = jsonResponse;
+                    dataRendering();
+                })
+
+        }
+        catch (err) {
+            console.log(err)
+        }
+
+        $('#nextuser').on('click', e => {
+
+            index += 1;
+            if (index > userData.length) {
+                alert('No more people!');
+            }
+            else {
+                dataRendering();
+            }
+
+        });
+
+
+        function dataRendering() {
+
+            let data = "";
+            for (var i = 0; i < index; i++) {
+                data += `<div class="box">
+                            <div class="indexing">
+                                <h1 class="font-weight-bolder">${i + 1}</h1>
+                            </div>  
+                            <div class="content">
+                                <div class="title">
+                                    <h3 class="font-weight-bold"> Name: </h3>
+                                    <h3 class="font-weight-normal">${userData[i].name}</h3>
+                                </div>
+                                <div class="description">
+                                    <h3 class="font-weight-bold">Location:</h3>
+                                    <h3 class="font-weight-normal">${userData[i].location}</h3>
+                                </div>
+                                
+                            </div>
+                        </div>`
+            }
+
+            $('#peopleData').html(data)
+            $('#currentShowing').html(`CURRENTLY ${index} PEOPLE SHOWING`);
+
+        }
+
+    });
+</script>
+
+</html>
